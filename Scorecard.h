@@ -1,22 +1,41 @@
 #pragma once
+#include "colors.h"
 
+constexpr int scoreTypeCount = 13;
 void setTextColor(int color);
 void sortDiceByValue(std::vector<Dice>& dice);
 
 // class to hold player scores
 class Scorecard {
 public:
-    // initiate player scores
-    int scores[13] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    //                 1s,2s,3s,4s,5s,6s,3k,4k,fh,sm,lg,ch,yh
+    // initiate player scores      1s,2s,3s,4s,5s,6s,3k,4k,fh,sm,lg,ch,yh
+    int scores[scoreTypeCount] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
     // track when score slots are used
-    bool scoreUsed[13] = { false, false, false, false, false, false, false, false, false, false, false, false, false };
+    bool scoreUsed[scoreTypeCount] = { false, false, false, false, false, false, false, false, false, false, false, false, false };
+
+    // each score type has a corresponding index
+    const int ones = 0;
+    const int twos = 1;
+    const int threes = 2;
+    const int fours = 3;
+    const int fives = 4;
+    const int sixes = 5;
+    const int threeKind = 6;
+    const int fourKind = 7;
+    const int fullHouse = 8;
+    const int smStraight = 9;
+    const int lgStraight = 10;
+    const int chance = 11;
+    const int yahtzee = 12;
 
     // constructor for player id
     int playerId = 0;
     Scorecard(int id = 0) : playerId(id) {}
 
+    // additional variables
+    const int maxDieValue = 6;
+    const int upperSectionThreshold = 6;
     int turnCounter = 0;
     int turnScore = 0;
     std::string scoreType = "";
@@ -27,11 +46,12 @@ public:
     int lowerTotal = 0;
     int grandTotal = 0;
     int rollSum = 0;
-    int bonusCounter = 63;
+    const int bonusThreshold = 63;
+    int bonusCountdown = bonusThreshold;
 
     // check if player has turn
     bool playerHasTurn() {
-        for (int i = 0; i < 13; i++) {
+        for (int i = 0; i < scoreTypeCount; i++) {
             if (scoreUsed[i] == false)
                 return true;
         }
@@ -49,24 +69,24 @@ public:
     void printBoard() {
         std::cout << "\n\t~PLAYER " << playerId << " SCORECARD~\n" << std::endl;
         std::cout << "-----------------------------------------" << std::endl;
-        std::cout << "|\t1s (Ones)\t|\t" << printScore(scores, scoreUsed, 0) << "\t|" << std::endl;
-        std::cout << "|\t2s (Twos)\t|\t" << printScore(scores, scoreUsed, 1) << "\t|" << std::endl;
-        std::cout << "|\t3s (Threes)\t|\t" << printScore(scores, scoreUsed, 2) << "\t|" << std::endl;
-        std::cout << "|\t4s (Fours)\t|\t" << printScore(scores, scoreUsed, 3) << "\t|" << std::endl;
-        std::cout << "|\t5s (Fives)\t|\t" << printScore(scores, scoreUsed, 4) << "\t|" << std::endl;
-        std::cout << "|\t6s (Sixes)\t|\t" << printScore(scores, scoreUsed, 5) << "\t|" << std::endl;
+        std::cout << "|\t1s (Ones)\t|\t" << printScore(scores, scoreUsed, ones) << "\t|" << std::endl;
+        std::cout << "|\t2s (Twos)\t|\t" << printScore(scores, scoreUsed, twos) << "\t|" << std::endl;
+        std::cout << "|\t3s (Threes)\t|\t" << printScore(scores, scoreUsed, threes) << "\t|" << std::endl;
+        std::cout << "|\t4s (Fours)\t|\t" << printScore(scores, scoreUsed, fours) << "\t|" << std::endl;
+        std::cout << "|\t5s (Fives)\t|\t" << printScore(scores, scoreUsed, fives) << "\t|" << std::endl;
+        std::cout << "|\t6s (Sixes)\t|\t" << printScore(scores, scoreUsed, sixes) << "\t|" << std::endl;
         std::cout << "|---------------------------------------|" << std::endl;
-        std::cout << "|\tBonus (" << bonusCounter << " more pts)\t" << bonus << "\t|" << std::endl;
+        std::cout << "|\tBonus (" << bonusCountdown << " more pts)\t" << bonus << "\t|" << std::endl;
         std::cout << "|---------------------------------------|" << std::endl;
         std::cout << "|\tUPPER TOTAL\t|\t" << upperTotal << "\t|" << std::endl;
         std::cout << "|---------------------------------------|" << std::endl;
-        std::cout << "|\t3 of a Kind\t|\t" << printScore(scores, scoreUsed, 6) << "\t|" << std::endl;
-        std::cout << "|\t4 of a Kind\t|\t" << printScore(scores, scoreUsed, 7) << "\t|" << std::endl;
-        std::cout << "|\tFull House\t|\t" << printScore(scores, scoreUsed, 8) << "\t|" << std::endl;
-        std::cout << "|\tSm. Straight\t|\t" << printScore(scores, scoreUsed, 9) << "\t|" << std::endl;
-        std::cout << "|\tLg. Straight\t|\t" << printScore(scores, scoreUsed, 10) << "\t|" << std::endl;
-        std::cout << "|\tChance\t\t|\t" << printScore(scores, scoreUsed, 11) << "\t|" << std::endl;
-        std::cout << "|\tYahtzee\t\t|\t" << printScore(scores, scoreUsed, 12) << "\t|" << std::endl;
+        std::cout << "|\t3 of a Kind\t|\t" << printScore(scores, scoreUsed, threeKind) << "\t|" << std::endl;
+        std::cout << "|\t4 of a Kind\t|\t" << printScore(scores, scoreUsed, fourKind) << "\t|" << std::endl;
+        std::cout << "|\tFull House\t|\t" << printScore(scores, scoreUsed, fullHouse) << "\t|" << std::endl;
+        std::cout << "|\tSm. Straight\t|\t" << printScore(scores, scoreUsed, smStraight) << "\t|" << std::endl;
+        std::cout << "|\tLg. Straight\t|\t" << printScore(scores, scoreUsed, lgStraight) << "\t|" << std::endl;
+        std::cout << "|\tChance\t\t|\t" << printScore(scores, scoreUsed, chance) << "\t|" << std::endl;
+        std::cout << "|\tYahtzee\t\t|\t" << printScore(scores, scoreUsed, yahtzee) << "\t|" << std::endl;
         std::cout << "|\tYahtzee Bonus\t|\t" << yahtzeeBonus << "\t|" << std::endl;
         std::cout << "|---------------------------------------|" << std::endl;
         std::cout << "|\tLOWER TOTAL\t|\t" << lowerTotal << "\t|" << std::endl;
@@ -90,17 +110,17 @@ public:
             if (savedDice[0].dieRoll != savedDice[i].dieRoll)
                 return;
         }
-        if (scoreUsed[12] != true)
+        if (scoreUsed[yahtzee] != true)
             return;
         else
-            scoreUsed[12] = false;
+            scoreUsed[yahtzee] = false;
     }
 
     // choose score from available score slots
     void chooseScore(std::vector<Dice> savedDice) {
         bool scoreConditionMet = true;
         bool selectionValid = true;
-        std::string scoreMenu[13] = {
+        std::string scoreMenu[scoreTypeCount] = {
             "\n1.  Ones",
             "\n2.  Twos",
             "\n3.  Threes",
@@ -121,7 +141,7 @@ public:
 
         // print available score slots
         std::cout << "\n\nCHOOSE A SCORE:\n";
-        for (int i = 0; i < 13; i++) {
+        for (int i = 0; i < scoreTypeCount; i++) {
             if (scoreUsed[i] == false) {
                 std::cout << scoreMenu[i];
             }
@@ -138,9 +158,9 @@ public:
                 if (std::cin.fail()) {
                     std::cin.clear();
                     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                    setTextColor(12);
+                    setTextColor(colors::red);
                     std::cout << "\nERROR: INVALID INPUT\n" << std::endl;
-                    setTextColor(7);
+                    setTextColor(colors::white);
                     std::cout << "ENTER A NUMBER:\t";
                     std::cin >> scoreSelect;
                 }
@@ -153,127 +173,127 @@ public:
             case 1:
                 scoreType = "ONES";
                 rollSum = sumOfOne(savedDice);
-                scores[0] = rollSum;
-                turnScore = scores[0];
-                scoreUsed[0] = true;
+                scores[ones] = rollSum;
+                turnScore = scores[ones];
+                scoreUsed[ones] = true;
                 break;
             case 2:
                 scoreType = "TWOS";
                 rollSum = sumOfOne(savedDice);
-                scores[1] = rollSum;
-                turnScore = scores[1];
-                scoreUsed[1] = true;
+                scores[twos] = rollSum;
+                turnScore = scores[twos];
+                scoreUsed[twos] = true;
                 break;
             case 3:
                 scoreType = "THREES";
                 rollSum = sumOfOne(savedDice);
-                scores[2] = rollSum;
-                turnScore = scores[2];
-                scoreUsed[2] = true;
+                scores[threes] = rollSum;
+                turnScore = scores[threes];
+                scoreUsed[threes] = true;
                 break;
             case 4:
                 scoreType = "FOURS";
                 rollSum = sumOfOne(savedDice);
-                scores[3] = rollSum;
-                turnScore = scores[3];
-                scoreUsed[3] = true;
+                scores[fours] = rollSum;
+                turnScore = scores[fours];
+                scoreUsed[fours] = true;
                 break;
             case 5:
                 scoreType = "FIVES";
                 rollSum = sumOfOne(savedDice);
-                scores[4] = rollSum;
-                turnScore = scores[4];
-                scoreUsed[4] = true;
+                scores[fives] = rollSum;
+                turnScore = scores[fives];
+                scoreUsed[fives] = true;
                 break;
             case 6:
                 scoreType = "SIXES";
                 rollSum = sumOfOne(savedDice);
-                scores[5] = rollSum;
-                turnScore = scores[5];
-                scoreUsed[5] = true;
+                scores[sixes] = rollSum;
+                turnScore = scores[sixes];
+                scoreUsed[sixes] = true;
                 break;
             case 7:
                 scoreType = "3 OF A KIND";
-                scoreConditionMet = validateScore(7, savedDice);
+                scoreConditionMet = validateScore(scoreSelect, savedDice);
                 if (scoreConditionMet == true) {
                     rollSum = sumOfAll(savedDice);
-                    scores[6] = rollSum;
+                    scores[threeKind] = rollSum;
                 }
                 else
-                    scores[6] = 0;
-                turnScore = scores[6];
-                scoreUsed[6] = true;
+                    scores[threeKind] = 0;
+                turnScore = scores[threeKind];
+                scoreUsed[threeKind] = true;
                 break;
             case 8:
                 scoreType = "4 OF A KIND";
-                scoreConditionMet = validateScore(8, savedDice);
+                scoreConditionMet = validateScore(scoreSelect, savedDice);
                 if (scoreConditionMet == true) {
                     rollSum = sumOfAll(savedDice);
-                    scores[7] = rollSum;
+                    scores[fourKind] = rollSum;
                 }
                 else
-                    scores[7] = 0;
-                turnScore = scores[7];
-                scoreUsed[7] = true;
+                    scores[fourKind] = 0;
+                turnScore = scores[fourKind];
+                scoreUsed[fourKind] = true;
                 break;
             case 9:
                 scoreType = "FULL HOUSE";
-                scoreConditionMet = validateScore(9, savedDice);
+                scoreConditionMet = validateScore(scoreSelect, savedDice);
                 if (scoreConditionMet == true) {
-                    scores[8] = 25;
+                    scores[fullHouse] = 25;
                 }
                 else
-                    scores[8] = 0;
-                turnScore = scores[8];
-                scoreUsed[8] = true;
+                    scores[fullHouse] = 0;
+                turnScore = scores[fullHouse];
+                scoreUsed[fullHouse] = true;
                 break;
             case 10:
                 scoreType = "SMALL STRAIGHT";
-                scoreConditionMet = validateScore(10, savedDice);
+                scoreConditionMet = validateScore(scoreSelect, savedDice);
                 if (scoreConditionMet == true) {
-                    scores[9] = 30;
+                    scores[smStraight] = 30;
                 }
                 else
-                    scores[9] = 0;
-                turnScore = scores[9];
-                scoreUsed[9] = true;
+                    scores[smStraight] = 0;
+                turnScore = scores[smStraight];
+                scoreUsed[smStraight] = true;
                 break;
             case 11:
                 scoreType = "LARGE STRAIGHT";
-                scoreConditionMet = validateScore(11, savedDice);
+                scoreConditionMet = validateScore(scoreSelect, savedDice);
                 if (scoreConditionMet == true) {
-                    scores[10] = 40;
+                    scores[lgStraight] = 40;
                 }
                 else
-                    scores[10] = 0;
-                turnScore = scores[10];
-                scoreUsed[10] = true;
+                    scores[lgStraight] = 0;
+                turnScore = scores[lgStraight];
+                scoreUsed[lgStraight] = true;
                 break;
             case 12:
                 scoreType = "CHANCE";
                 rollSum = sumOfAll(savedDice);
-                scores[11] = rollSum;
-                turnScore = scores[11];
-                scoreUsed[11] = true;
+                scores[chance] = rollSum;
+                turnScore = scores[chance];
+                scoreUsed[chance] = true;
                 break;
             case 13:
                 scoreType = "YAHTZEE";
-                scoreConditionMet = validateScore(13, savedDice);
+                scoreConditionMet = validateScore(scoreSelect, savedDice);
                 if (scoreConditionMet == true) {
-                    if (scores[12] == 0)
-                        scores[12] = 50;
+                    if (scores[yahtzee] == 0)
+                        scores[yahtzee] = 50;
                     else
                         yahtzeeBonus = yahtzeeBonus + 100;
                 }
                 else
-                    scores[12] = 0;
-                turnScore = scores[12];
-                scoreUsed[12] = true;
+                    scores[yahtzee] = 0;
+                turnScore = scores[yahtzee];
+                scoreUsed[yahtzee] = true;
                 break;
             default:
-                setTextColor(12);
+                setTextColor(colors::red);
                 std::cout << "\nERROR: INVALID INPUT\n" << std::endl;
-                setTextColor(7);
+                setTextColor(colors::white);
                 break;
             }
         } while (!selectionValid);
@@ -283,9 +303,9 @@ public:
     bool validateSelection(int selection) {
         --selection;
         if (scoreUsed[selection] == true) {
-            setTextColor(12);
+            setTextColor(colors::red);
             std::cout << "\nERROR: INVALID SELECTION";
-            setTextColor(7);
+            setTextColor(colors::white);
             return false;
         }
         else
@@ -295,7 +315,7 @@ public:
     // calculate sum of one type of number (upper section: 1-6)
     int sumOfOne(std::vector<Dice> savedDice) {
         int scoreSum = 0;
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < savedDice.size(); i++) {
             if (savedDice[i].dieRoll == scoreSelect)
                 scoreSum = scoreSum + scoreSelect;
         }
@@ -305,7 +325,7 @@ public:
     // calculate sum of all dice (3k, 4k, ch)
     int sumOfAll(std::vector<Dice> savedDice) {
         int scoreSum = 0;
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < savedDice.size(); i++) {
             scoreSum = scoreSum + savedDice[i].dieRoll;
         }
         return scoreSum;
@@ -315,9 +335,9 @@ public:
     bool validateScore(int scoreType, std::vector<Dice> savedDice) {
         int conditionCounter = 0;
 
-        if (scoreType == 7) {
+        if (scoreType == threeKind + 1) {
             // check for 3 of a kind
-            for (int i = 1; i < 7; i++) {
+            for (int i = 1; i < maxDieValue + 1; i++) {
                 for (int j = 0; j < savedDice.size(); j++) {
                     if (savedDice[j].dieRoll == i)
                         ++conditionCounter;
@@ -332,9 +352,9 @@ public:
             else
                 return false;
         }
-        else if (scoreType == 8) {
+        else if (scoreType == fourKind + 1) {
             // check for 4 of a kind
-            for (int i = 1; i < 7; i++) {
+            for (int i = 1; i < maxDieValue + 1; i++) {
                 for (int j = 0; j < savedDice.size(); j++) {
                     if (savedDice[j].dieRoll == i)
                         ++conditionCounter;
@@ -349,7 +369,7 @@ public:
             else
                 return false;
         }
-        else if (scoreType == 9) {
+        else if (scoreType == fullHouse + 1) {
             // check for full house
             int firstValue = savedDice[0].dieRoll;
             int secondValue = 0;
@@ -374,7 +394,7 @@ public:
             else
                 return false;
         }
-        else if (scoreType == 10) {
+        else if (scoreType == smStraight + 1) {
             // check for small straight
             sortDiceByValue(savedDice);
             for (int i = 1; i < savedDice.size(); i++) {
@@ -387,9 +407,9 @@ public:
             else
                 return true;
         }
-        else if (scoreType == 11) {
+        else if (scoreType == lgStraight + 1) {
             // check for large straight
-            std::sort(savedDice.begin(), savedDice.end());
+            sortDiceByValue(savedDice);
             for (int i = 1; i < savedDice.size(); i++) {
                 int j = i - 1;
                 if (savedDice[i].dieRoll != savedDice[j].dieRoll + 1)
@@ -397,7 +417,7 @@ public:
             }
             return true;
         }
-        else if (scoreType == 13) {
+        else if (scoreType == yahtzee + 1) {
             // check for yahtzee
             for (int i = 1; i < savedDice.size(); i++) {
                 if (savedDice[0].dieRoll != savedDice[i].dieRoll)
@@ -412,9 +432,9 @@ public:
 
     // print back what player scored each turn
     void printLastScore(std::string score, int value) {
-        setTextColor(12);
+        setTextColor(colors::red);
         std::cout << "\nPLAYER " << playerId << " SCORED " << value << " POINTS FOR " << score << "\n" << std::endl;
-        setTextColor(7);
+        setTextColor(colors::white);
         system("pause");
     }
 
@@ -423,18 +443,18 @@ public:
         int lowerSum = 0;
         int upperSum = 0;
 
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < upperSectionThreshold; i++) {
             upperSum = upperSum + scores[i];
         }
         upperTotal = upperSum;
-        bonusCounter = 63 - upperSum;
+        bonusCountdown = bonusThreshold - upperSum;
 
-        if (upperTotal >= 63) {
+        if (upperTotal >= bonusThreshold) {
             bonus = 35;
             upperTotal = upperTotal + bonus;
         }
 
-        for (int j = 6; j < 13; j++) {
+        for (int j = upperSectionThreshold; j < scoreTypeCount; j++) {
             lowerSum = lowerSum + scores[j];
         }
         lowerTotal = lowerSum + yahtzeeBonus;
@@ -444,11 +464,11 @@ public:
 
     // clear all scores
     void clearScores() {
-        for (int i = 0; i < 13;) {
+        for (int i = 0; i < scoreTypeCount;) {
             scores[i] = 0;
             i++;
         }
-        for (int j = 0; j < 13;) {
+        for (int j = 0; j < scoreTypeCount;) {
             scoreUsed[j] = false;
             j++;
         }
@@ -458,6 +478,6 @@ public:
         lowerTotal = 0;
         grandTotal = 0;
         rollSum = 0;
-        bonusCounter = 63;
+        bonusCountdown = bonusThreshold;
     }
 };

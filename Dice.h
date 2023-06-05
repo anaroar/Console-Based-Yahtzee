@@ -1,5 +1,8 @@
 #pragma once
+#include "colors.h"
 
+constexpr int minDieValue = 1;
+constexpr int maxDieValue = 6;
 void setTextColor(int color);
 
 // class to generate dice
@@ -19,7 +22,7 @@ public:
     // set die roll with random number from 1-6
     void setDieRoll() {
         if (dieUsed == false)
-            dieRoll = 1 + rand() % 6;
+            dieRoll = minDieValue + rand() % maxDieValue;
         else
             return;
     }
@@ -31,7 +34,7 @@ public:
 
     // print Xs instead of die values
     void printEmptyRoll() {
-        setTextColor(8);
+        setTextColor(colors::gray);
         std::cout << "X\t";
     }
 };

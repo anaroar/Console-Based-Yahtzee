@@ -15,6 +15,7 @@ Author:         Diana Roar
 #include <limits>
 #include "Dice.h"
 #include "Scorecard.h"
+#include "colors.h"
 
 // function declarations
 void setTextColor(int color);
@@ -46,7 +47,7 @@ int main()
 
     // game intro
     std::cout << "WELCOME TO..." << std::endl;
-    setTextColor(12);
+    setTextColor(colors::red);
     std::cout << "__    __   _       _   _   _______   _____   _____   _____" << std::endl;
     std::cout << "\\ \\  / /  / \\     | | | | |__   __| |___  | |  ___| |  ___|" << std::endl;
     std::cout << " \\ \\/ /  / _ \\    | |_| |    | |       / /  | |___  | |___" << std::endl;
@@ -54,14 +55,14 @@ int main()
     std::cout << "  / /  /  ___  \\  | | | |    | |     / /__  | |___  | |___" << std::endl;
     std::cout << " / /  /_/     \\_\\ |_| |_|    |_|    /_____| |_____| |_____|" << std::endl;
     std::cout << "/_/\n" << std::endl;
-    setTextColor(7);
+    setTextColor(colors::white);
     system("pause");
 
     do {
         clearScreen();
-        setTextColor(12);
+        setTextColor(colors::red);
         std::cout << "\nSTARTING NEW GAME...\n" << std::endl;
-        setTextColor(7);
+        setTextColor(colors::white);
 
         // alternate turns until all score slots are used for each player
         do {
@@ -112,14 +113,14 @@ int main()
         } while (!gameOver);
 
         // print game results
-        setTextColor(12);
+        setTextColor(colors::red);
         std::cout << "\n\033[7mGAME OVER\033[0m\n" << std::endl; 
-        setTextColor(7);
+        setTextColor(colors::white);
         std::cout << "PLAYER 1 FINAL SCORE: \t" << player1.grandTotal << std::endl;
         std::cout << "PLAYER 2 FINAL SCORE: \t" << player2.grandTotal << "\n" << std::endl;
 
         // choose a winner
-        setTextColor(14);
+        setTextColor(colors::yellow);
         if (player1.grandTotal > player2.grandTotal)
             std::cout << "PLAYER 1 WINS!" << std::endl;
         else if (player1.grandTotal < player2.grandTotal)
@@ -128,7 +129,7 @@ int main()
             std::cout << "NOBODY WINS" << std::endl;
         
         // reset game or end program
-        setTextColor(7);
+        setTextColor(colors::white);
         std::cout << "\nDO YOU WANT TO PLAY AGAIN? Y/N:\t";
         std::cin >> input;
         if (input == "Y" || input == "y") {
@@ -140,9 +141,9 @@ int main()
         }
         else {
             playAgain = false;
-            setTextColor(12);
+            setTextColor(colors::red);
             std::cout << "\nTHANK YOU FOR PLAYING!\n" << std::endl;
-            setTextColor(7);
+            setTextColor(colors::white);
         }
     } while (playAgain);
     return 0;
@@ -162,11 +163,11 @@ void clearScreen() {
 // roll available dice
 void rollDice(std::vector<Dice>& diePool) {
     srand(time(0));
-    setTextColor(12);
+    setTextColor(colors::red);
     std::cout << "\n\nROLLING DICE...\n" << std::endl;
 
     // set dice with random numbers between 1-6
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < diePool.size(); i++) {
         if (diePool[i].dieUsed == false)
             diePool[i].setDieRoll();
     }
@@ -185,9 +186,9 @@ void printDiceHeader() {
 
 // print rolled dice
 void printRolledDice(std::vector<Dice> diePool) {
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < diePool.size(); i++) {
         if (diePool[i].dieUsed == false) {
-            setTextColor(12);
+            setTextColor(colors::red);
             diePool[i].printDieRoll();
         }
         else
@@ -197,7 +198,7 @@ void printRolledDice(std::vector<Dice> diePool) {
 
 // sort and print player's current saved dice
 void printSavedDice(std::vector<Dice> savedDice) {
-    setTextColor(14);
+    setTextColor(colors::yellow);
     std::cout << "\n\nSAVED DICE:\t";
     if (savedDice.empty()) {
         std::cout << "[NONE]";
@@ -207,19 +208,20 @@ void printSavedDice(std::vector<Dice> savedDice) {
             savedDice[i].printDieRoll();
         }
     }
-    setTextColor(7);
+    setTextColor(colors::white);
 }
 
 // selection menu
 void printSelectMenu() {
-    setTextColor(7);
+    const int dashCount = 147;
+    setTextColor(colors::white);
     std::cout << "\n\n ";
-    for (int i = 0; i < 147; i++) {
+    for (int i = 0; i < dashCount; i++) {
         std::cout << "-";
     }
     std::cout << "\n| 1. Keep D1\t2. Keep D2\t3.Keep D3\t4. Keep D4\t5. Keep D5\t";
     std::cout << "6. Keep ALL\t7. VIEW SCORECARD\t8. DESELECT\t\033[93;4m9. CONTINUE\033[0m | \n ";
-    for (int i = 0; i < 147; i++) {
+    for (int i = 0; i < dashCount; i++) {
         std::cout << "-";
     }
     std::cout << "\n" << std::endl;
@@ -240,43 +242,44 @@ void selectDice(Scorecard player, std::vector<Dice>& diePool, std::vector<Dice>&
             if (std::cin.fail()) {
                 std::cin.clear();
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                setTextColor(12);
+                setTextColor(colors::red);
                 std::cout << "\nERROR: INVALID INPUT\n" << std::endl;
-                setTextColor(7);
+                setTextColor(colors::white);
                 std::cout << "ENTER A NUMBER:\t";
                 std::cin >> dieSelect;
             }
             if (!std::cin.fail())
                 break;
         }
+        int dieIndex = dieSelect - 1;
 
         switch (dieSelect) {
         case 1:
-            savedDice.push_back(diePool[0]);
-            diePool[0].dieUsed = true;
+            savedDice.push_back(diePool[dieIndex]);
+            diePool[dieIndex].dieUsed = true;
             break;
         case 2:
-            savedDice.push_back(diePool[1]);
-            diePool[1].dieUsed = true;
+            savedDice.push_back(diePool[dieIndex]);
+            diePool[dieIndex].dieUsed = true;
             break;
         case 3:
-            savedDice.push_back(diePool[2]);
-            diePool[2].dieUsed = true;
+            savedDice.push_back(diePool[dieIndex]);
+            diePool[dieIndex].dieUsed = true;
             break;
         case 4:
-            savedDice.push_back(diePool[3]);
-            diePool[3].dieUsed = true;
+            savedDice.push_back(diePool[dieIndex]);
+            diePool[dieIndex].dieUsed = true;
             break;
         case 5:
-            savedDice.push_back(diePool[4]);
-            diePool[4].dieUsed = true;
+            savedDice.push_back(diePool[dieIndex]);
+            diePool[dieIndex].dieUsed = true;
             break;
         case 6:
             // keep all & skip remaining rolls
-            setTextColor(14);
+            setTextColor(colors::yellow);
             std::cout << "\nARE YOU SURE YOU WANT TO KEEP ALL? Y/N:\t";
             std::cin >> pInput;
-            setTextColor(7);
+            setTextColor(colors::white);
             if (pInput == "Y" || pInput == "y") {
                 autoSelectDice(diePool, savedDice);
                 turnCounter = 2;
@@ -292,7 +295,7 @@ void selectDice(Scorecard player, std::vector<Dice>& diePool, std::vector<Dice>&
             clearScreen();
             printSavedDice(savedDice);
             std::cout << "\n\n";
-            setTextColor(12);
+            setTextColor(colors::red);
             printDiceHeader();
             printRolledDice(diePool);
             printSelectMenu();
@@ -303,7 +306,7 @@ void selectDice(Scorecard player, std::vector<Dice>& diePool, std::vector<Dice>&
             clearScreen();
             sortDiceByValue(savedDice);
             printSavedDice(savedDice);
-            setTextColor(12);
+            setTextColor(colors::red);
             std::cout << "\n\n";
             printDiceHeader();
             printRolledDice(diePool);
@@ -316,9 +319,9 @@ void selectDice(Scorecard player, std::vector<Dice>& diePool, std::vector<Dice>&
             printSavedDice(savedDice);
             break;
         default:
-            setTextColor(12);
+            setTextColor(colors::red);
             std::cout << "\nERROR: INVALID INPUT\n" << std::endl;
-            setTextColor(7);
+            setTextColor(colors::white);
             break;
         }
     } while (dieSelect != 6 && dieSelect != 9);
@@ -326,13 +329,14 @@ void selectDice(Scorecard player, std::vector<Dice>& diePool, std::vector<Dice>&
 
 // deselection menu
 void printDeselectMenu() {
-    setTextColor(8);
+    const int dashCount = 129;
+    setTextColor(colors::gray);
     std::cout << "\n\n ";
-    for (int i = 0; i < 129; i++) {
+    for (int i = 0; i < dashCount; i++) {
         std::cout << "-";
     }
     std::cout << "\n| 1. Drop D1\t2. Drop D2\t3.Drop D3\t4. Drop D4\t5. Drop D5\t6. Drop ALL\t7. VIEW SCORECARD\t8. RETURN |\n ";
-    for (int i = 0; i < 129; i++) {
+    for (int i = 0; i < dashCount; i++) {
         std::cout << "-";
     }
     std::cout << "\n" << std::endl;
@@ -341,7 +345,7 @@ void printDeselectMenu() {
 // deselect saved dice
 void deselectDie(std::vector<Dice>& diePool, std::vector<Dice>& savedDice, int i, int deselect) {
     int dieIdNum = savedDice[i].dieId;
-    for (int j = 0; j < 5; j++) {
+    for (int j = 0; j < diePool.size(); j++) {
         if (diePool[j].dieId == dieIdNum)
             diePool[j].dieUsed = false;
     }
@@ -358,9 +362,11 @@ void deselectDice(Scorecard player, std::vector<Dice>& diePool, std::vector<Dice
 
         // if there are no saved dice, return to main menu
         if (savedDice.empty()) {
-            setTextColor(12);
-            std::cout << "\n\nTHERE ARE NO MORE SAVED DICE TO DESELECT!\n\nRETURNING TO MAIN MENU...\n" << std::endl;
-            setTextColor(7);
+            setTextColor(colors::red);
+            std::cout << "\n\nTHERE ARE NO MORE SAVED DICE TO DESELECT!";
+            setTextColor(colors::yellow);
+            std::cout << "\n\nRETURNING TO MAIN MENU...\n" << std::endl;
+            setTextColor(colors::white);
             system("pause");
             deselect = 8;
             break;
@@ -369,14 +375,14 @@ void deselectDice(Scorecard player, std::vector<Dice>& diePool, std::vector<Dice
         // print current saved dice that player can deselect
         xCounter = 0;
         sortDiceByValue(savedDice);
-        setTextColor(14);
+        setTextColor(colors::yellow);
         std::cout << "\n\nSAVED DICE:\n" << std::endl;
         printDiceHeader();
         for (int i = 0; i < savedDice.size(); i++) {
             savedDice[i].printDieRoll();
             ++xCounter;
         }
-        setTextColor(8);
+        setTextColor(colors::gray);
         for (int j = xCounter; j < savedDice.size(); j++) {
             std::cout << "X\t";
         }
@@ -391,42 +397,43 @@ void deselectDice(Scorecard player, std::vector<Dice>& diePool, std::vector<Dice
             if (std::cin.fail()) {
                 std::cin.clear();
                 std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                setTextColor(12);
+                setTextColor(colors::red);
                 std::cout << "\nERROR: INVALID INPUT\n" << std::endl;
-                setTextColor(7);
+                setTextColor(colors::white);
                 std::cout << "ENTER A NUMBER:\t";
                 std::cin >> deselect;
             }
             if (!std::cin.fail())
                 break;
         }
+        int dieIndex = deselect - 1;
 
         switch (deselect) {
         case 1:
-            deselectDie(diePool, savedDice, 0, deselect);
+            deselectDie(diePool, savedDice, dieIndex, deselect);
             break;
         case 2:
-            deselectDie(diePool, savedDice, 1, deselect);
+            deselectDie(diePool, savedDice, dieIndex, deselect);
             break;
         case 3:
-            deselectDie(diePool, savedDice, 2, deselect);
+            deselectDie(diePool, savedDice, dieIndex, deselect);
             break;
         case 4:
-            deselectDie(diePool, savedDice, 3, deselect);
+            deselectDie(diePool, savedDice, dieIndex, deselect);
             break;
         case 5:
-            deselectDie(diePool, savedDice, 4, deselect);
+            deselectDie(diePool, savedDice, dieIndex, deselect);
             break;
         case 6:
             // deselect all
             savedDice.clear();
             resetDice(diePool);
-            setTextColor(7);
+            setTextColor(colors::white);
             break;
         case 7:
             // view scorecard
             clearScreen();
-            setTextColor(7);
+            setTextColor(colors::white);
             player.printBoard();
             system("pause");
             clearScreen();
@@ -435,12 +442,12 @@ void deselectDice(Scorecard player, std::vector<Dice>& diePool, std::vector<Dice
             break;
         case 8:
             // return to main
-            setTextColor(7);
+            setTextColor(colors::white);
             break;
         default:
-            setTextColor(12);
+            setTextColor(colors::red);
             std::cout << "\nERROR: INVALID INPUT\n" << std::endl;
-            setTextColor(7);
+            setTextColor(colors::white);
             break;
         }
     } while (deselect != 6 && deselect != 8);
@@ -449,7 +456,7 @@ void deselectDice(Scorecard player, std::vector<Dice>& diePool, std::vector<Dice
 // auto-select dice on last roll
 void autoSelectDice(std::vector<Dice>& diePool, std::vector<Dice>& savedDice) {
     // automatically add unused dice into saved dice pool 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < diePool.size(); i++) {
         if (diePool[i].dieUsed == false) {
             savedDice.push_back(diePool[i]);
             diePool[i].dieUsed = true;
@@ -459,16 +466,18 @@ void autoSelectDice(std::vector<Dice>& diePool, std::vector<Dice>& savedDice) {
 
 // reset dice
 void resetDice(std::vector<Dice>& diePool) {
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < diePool.size(); i++)
         diePool[i].dieUsed = false;
 }
 
 // player turn
 std::vector<Dice> playerTurn(Scorecard player, std::vector<Dice> diePool, std::vector<Dice> savedDice) {
     // 3 rolls per turn
-    for (int i = 0; i < 3; i++) {
-        if (savedDice.size() == 5)
-            i = 2;
+    const int rollsPerTurn = 3;
+    const int maxDieCapacity = 5;
+    for (int i = 0; i < rollsPerTurn; i++) {
+        if (savedDice.size() == maxDieCapacity)
+            i = rollsPerTurn - 1;
         else {
             rollDice(diePool);
             printDiceHeader();
@@ -476,7 +485,7 @@ std::vector<Dice> playerTurn(Scorecard player, std::vector<Dice> diePool, std::v
         }
 
         // User chooses which dice to keep
-        if (i < 2) {
+        if (i < rollsPerTurn - 1) {
             printSelectMenu();
             selectDice(player, diePool, savedDice, i);
         }

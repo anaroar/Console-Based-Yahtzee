@@ -142,6 +142,7 @@
     <ClCompile Include="Yahtzee.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="colors.h" />
     <ClInclude Include="Dice.h" />
     <ClInclude Include="Scorecard.h" />
   </ItemGroup>

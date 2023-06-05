@@ -3,14 +3,16 @@
 
 constexpr int minDieValue = 1;
 constexpr int maxDieValue = 6;
+
 void setTextColor(int color);
 
 // class to generate dice
 class Dice {
 public:
-    int dieRoll = 0;
-    bool dieUsed = false;
+    int dieRoll     = 0;
+    bool dieUsed    = false;
 
+    // override to sort Dice objects by roll value
     bool operator< (const Dice& other) const {
         return dieRoll < other.dieRoll;
     }

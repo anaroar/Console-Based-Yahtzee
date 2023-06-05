@@ -36,11 +36,11 @@ std::vector<Dice> playerTurn(Scorecard player, std::vector<Dice> diePool, std::v
 
 int main()
 {
-    bool gameOver = false;
-    bool playAgain = false;
-    std::string input = "";
+    bool gameOver               = false;
+    bool playAgain              = false;
+    std::string input           = "";
+    std::vector<Dice> diePool   = { (1), (2), (3), (4), (5) };
 
-    std::vector<Dice> diePool = { (1), (2), (3), (4), (5) };
     std::vector<Dice> savedDice;
     Scorecard player1(1);
     Scorecard player2(2);
@@ -83,7 +83,6 @@ int main()
                 player1.updateTotals();
                 std::cout << "\n";
                 savedDice.clear();
-                //resetDice(diePool);
                 clearScreen();
             }
             // player 2
@@ -103,7 +102,6 @@ int main()
                 player2.updateTotals();
                 std::cout << "\n";
                 savedDice.clear();
-                //resetDice(diePool);
                 clearScreen();
             }
             // check if more turns exist
@@ -200,6 +198,7 @@ void printRolledDice(std::vector<Dice> diePool) {
 void printSavedDice(std::vector<Dice> savedDice) {
     setTextColor(colors::yellow);
     std::cout << "\n\nSAVED DICE:\t";
+
     if (savedDice.empty()) {
         std::cout << "[NONE]";
     }
@@ -216,11 +215,13 @@ void printSelectMenu() {
     const int dashCount = 147;
     setTextColor(colors::white);
     std::cout << "\n\n ";
+    
     for (int i = 0; i < dashCount; i++) {
         std::cout << "-";
     }
     std::cout << "\n| 1. Keep D1\t2. Keep D2\t3.Keep D3\t4. Keep D4\t5. Keep D5\t";
     std::cout << "6. Keep ALL\t7. VIEW SCORECARD\t8. DESELECT\t\033[93;4m9. CONTINUE\033[0m | \n ";
+    
     for (int i = 0; i < dashCount; i++) {
         std::cout << "-";
     }
@@ -229,9 +230,9 @@ void printSelectMenu() {
 
 // choose which dice to save
 void selectDice(Scorecard player, std::vector<Dice>& diePool, std::vector<Dice>& savedDice, int& turnCounter) {
-    int dieSelect = 0;
-    std::string pInput = "";
-    bool inputValid = true;
+    int dieSelect       = 0;
+    std::string pInput  = "";
+    bool inputValid     = true;
 
     do {
         std::cout << "ENTER A NUMBER:\t";
@@ -332,10 +333,12 @@ void printDeselectMenu() {
     const int dashCount = 129;
     setTextColor(colors::gray);
     std::cout << "\n\n ";
+    
     for (int i = 0; i < dashCount; i++) {
         std::cout << "-";
     }
     std::cout << "\n| 1. Drop D1\t2. Drop D2\t3.Drop D3\t4. Drop D4\t5. Drop D5\t6. Drop ALL\t7. VIEW SCORECARD\t8. RETURN |\n ";
+    
     for (int i = 0; i < dashCount; i++) {
         std::cout << "-";
     }
@@ -371,24 +374,23 @@ void deselectDice(Scorecard player, std::vector<Dice>& diePool, std::vector<Dice
             deselect = 8;
             break;
         }
-
         // print current saved dice that player can deselect
         xCounter = 0;
         sortDiceByValue(savedDice);
         setTextColor(colors::yellow);
         std::cout << "\n\nSAVED DICE:\n" << std::endl;
         printDiceHeader();
+
         for (int i = 0; i < savedDice.size(); i++) {
             savedDice[i].printDieRoll();
             ++xCounter;
         }
         setTextColor(colors::gray);
+        
         for (int j = xCounter; j < savedDice.size(); j++) {
             std::cout << "X\t";
         }
-
         printDeselectMenu();
-
         std::cout << "ENTER A NUMBER:\t";
         std::cin >> deselect;
 
@@ -473,8 +475,9 @@ void resetDice(std::vector<Dice>& diePool) {
 // player turn
 std::vector<Dice> playerTurn(Scorecard player, std::vector<Dice> diePool, std::vector<Dice> savedDice) {
     // 3 rolls per turn
-    const int rollsPerTurn = 3;
-    const int maxDieCapacity = 5;
+    const int rollsPerTurn      = 3;
+    const int maxDieCapacity    = 5;
+
     for (int i = 0; i < rollsPerTurn; i++) {
         if (savedDice.size() == maxDieCapacity)
             i = rollsPerTurn - 1;
@@ -483,7 +486,6 @@ std::vector<Dice> playerTurn(Scorecard player, std::vector<Dice> diePool, std::v
             printDiceHeader();
             printRolledDice(diePool);
         }
-
         // User chooses which dice to keep
         if (i < rollsPerTurn - 1) {
             printSelectMenu();

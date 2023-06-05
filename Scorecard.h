@@ -2,6 +2,7 @@
 #include "colors.h"
 
 constexpr int scoreTypeCount = 13;
+
 void setTextColor(int color);
 void sortDiceByValue(std::vector<Dice>& dice);
 
@@ -15,39 +16,39 @@ public:
     bool scoreUsed[scoreTypeCount] = { false, false, false, false, false, false, false, false, false, false, false, false, false };
 
     // each score type has a corresponding index
-    const int ones = 0;
-    const int twos = 1;
-    const int threes = 2;
-    const int fours = 3;
-    const int fives = 4;
-    const int sixes = 5;
-    const int threeKind = 6;
-    const int fourKind = 7;
-    const int fullHouse = 8;
-    const int smStraight = 9;
-    const int lgStraight = 10;
-    const int chance = 11;
-    const int yahtzee = 12;
+    const int ones          = 0;
+    const int twos          = 1;
+    const int threes        = 2;
+    const int fours         = 3;
+    const int fives         = 4;
+    const int sixes         = 5;
+    const int threeKind     = 6;
+    const int fourKind      = 7;
+    const int fullHouse     = 8;
+    const int smStraight    = 9;
+    const int lgStraight    = 10;
+    const int chance        = 11;
+    const int yahtzee       = 12;
 
     // constructor for player id
     int playerId = 0;
     Scorecard(int id = 0) : playerId(id) {}
 
     // additional variables
-    const int maxDieValue = 6;
+    const int maxDieValue           = 6;
     const int upperSectionThreshold = 6;
-    int turnCounter = 0;
-    int turnScore = 0;
-    std::string scoreType = "";
-    int scoreSelect = 0;
-    int upperTotal = 0;
-    int bonus = 0;
-    int yahtzeeBonus = 0;
-    int lowerTotal = 0;
-    int grandTotal = 0;
-    int rollSum = 0;
-    const int bonusThreshold = 63;
-    int bonusCountdown = bonusThreshold;
+    int turnCounter                 = 0;
+    int turnScore                   = 0;
+    std::string scoreType           = "";
+    int scoreSelect                 = 0;
+    int upperTotal                  = 0;
+    int bonus                       = 0;
+    int yahtzeeBonus                = 0;
+    int lowerTotal                  = 0;
+    int grandTotal                  = 0;
+    int rollSum                     = 0;
+    const int bonusThreshold        = 63;
+    int bonusCountdown              = bonusThreshold;
 
     // check if player has turn
     bool playerHasTurn() {
@@ -135,7 +136,6 @@ public:
             "\n12. Chance",
             "\n13. Yahtzee"
         };
-
         // if another yahtzee is scored, yahtzee is available again to select
         checkYahtzeeBonus(savedDice);
 
@@ -371,7 +371,7 @@ public:
         }
         else if (scoreType == fullHouse + 1) {
             // check for full house
-            int firstValue = savedDice[0].dieRoll;
+            int firstValue  = savedDice[0].dieRoll;
             int secondValue = 0;
             int condCounter = 0;
 
@@ -443,22 +443,26 @@ public:
         int lowerSum = 0;
         int upperSum = 0;
 
+        // update upper section
         for (int i = 0; i < upperSectionThreshold; i++) {
             upperSum = upperSum + scores[i];
         }
         upperTotal = upperSum;
         bonusCountdown = bonusThreshold - upperSum;
 
+        // check for bonus
         if (upperTotal >= bonusThreshold) {
             bonus = 35;
             upperTotal = upperTotal + bonus;
         }
 
+        // update lower section
         for (int j = upperSectionThreshold; j < scoreTypeCount; j++) {
             lowerSum = lowerSum + scores[j];
         }
         lowerTotal = lowerSum + yahtzeeBonus;
 
+        // update grand total
         grandTotal = upperTotal + lowerTotal;
     }
 
@@ -472,12 +476,12 @@ public:
             scoreUsed[j] = false;
             j++;
         }
-        upperTotal = 0;
-        bonus = 0;
-        yahtzeeBonus = 0;
-        lowerTotal = 0;
-        grandTotal = 0;
-        rollSum = 0;
-        bonusCountdown = bonusThreshold;
+        upperTotal      = 0;
+        bonus           = 0;
+        yahtzeeBonus    = 0;
+        lowerTotal      = 0;
+        grandTotal      = 0;
+        rollSum         = 0;
+        bonusCountdown  = bonusThreshold;
     }
 };

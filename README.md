@@ -7,9 +7,17 @@ The goal is to collect as many points as you can by achieving certain die roll c
 ### Taking a Turn
 The active player will roll a set of five dice, up to three times per turn. All five dice are rolled on the first iteration of rolls for each turn, but a player may choose to "keep" any number of dice, rather than re-roll them, for each roll after that. The player chooses which dice to keep by entering the number that corresponds with the die number they want to keep, followed by the Enter button on their keyboard.
 
-The player may also choose to de-select any number of dice that they previously kept, in order to pursue a different roll combination. They can do so by entering the number that corresponds with the "DESELECT" option shown in that same selection menu. 
+![Screenshot 2023-06-16 113651](https://github.com/anaroar/Yahtzee/assets/129563507/48a9ed34-08df-4449-b09a-07a647a8884f)
+
+![Screenshot 2023-06-16 113712](https://github.com/anaroar/Yahtzee/assets/129563507/9300f206-f1a8-47f5-ad0a-f61aa19a9a1b)
+
+The player may also choose to de-select any number of dice that they previously kept, in order to pursue a different roll combination. They can do so by entering the number that corresponds with the "DESELECT" option shown in that same selection menu. They will then be redirected to a deselection menu. 
+
+![Screenshot 2023-06-16 113730](https://github.com/anaroar/Yahtzee/assets/129563507/87ac0ffa-c8b3-4624-8785-0fcec4df58e6)
 
 The player will be prompted to choose a score after completing their third roll. They will enter a number that corresponds with an unused score slot, which is listed out for the player, and hit Enter. The program calculates how many points were scored and reflects it back to the player, signifying the end of their turn. 
+
+![Screenshot 2023-06-16 113750](https://github.com/anaroar/Yahtzee/assets/129563507/a271ff5f-5f91-4c54-a277-7e438c6da4bf)
 
 If the player chooses a score slot for which they do not meet the criteria to earn points, then they will earn a zero for that slot instead. Sometimes it is more advantageous to opt for a zero in one slot to avoid scoring a zero in another.
 ## Scoring Points
@@ -32,7 +40,7 @@ Score slots in the lower section require the player to obtain specific dice comb
 | Yahtzee | Get all dice of the same number | 50pts | *1 1 1 1 1* |
 | Chance | Get any combination of numbers | Total of all dice | *2 5 3 1 6* |
 
-If the player has already rolled one Yahtzee, they will be able to earn an additional Yahtzee bonus of 100pts for each Yahtzee scored after the first. However, if the player has already scored a zero for Yahtzee, any future Yahtzee bonuses will be forfeit.
+If the player has already rolled one Yahtzee, they will be able to earn an additional Yahtzee bonus of 100pts for each Yahtzee scored after the first. However, if the player has already scored a zero for Yahtzee, any future Yahtzee bonuses will be forfeited.
 ## How to Win
 The game ends after every score slot in each scorecard is used. The program alternates turns between players until this is completed, before calculating the players' grand totals and announcing a winner. 
 

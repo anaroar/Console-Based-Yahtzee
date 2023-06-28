@@ -46,4 +46,4 @@ The game ends after every score slot in each scorecard is used. The program alte
 
 Whichever player scored the most points overall, after adding up both their upper and lower sections, wins the game.
 ## Building
-You can build the solution and try the game yourself using Visual Studio 2019/2022 Community Edition.
+You can build the solution and try the game yourself using [Visual Studio 2019/2022 Community Edition](https://visualstudio.microsoft.com/downloads/).

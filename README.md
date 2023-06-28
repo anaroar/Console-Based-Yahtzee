@@ -1,4 +1,5 @@
 # Console-based Yahtzee in C++
+![yahtzee](https://github.com/anaroar/Console-Based-Yahtzee/assets/129563507/b514b0e3-9e5e-479f-bbcc-cab0f1282f8d)
 ## Overview
 The original Yahtzee is a multi-player dice game of both strategy and luck, created by Milton Bradley. It involves rolling a set of dice to try to get a certain combination of numbers in order to obtain the highest score. This program is a two-player console-based version of that, built with C++ in Visual Studio. 
 ## How to Play
